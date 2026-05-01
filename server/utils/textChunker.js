@@ -149,7 +149,7 @@ export const findRelevantChunks = (chunks, query, maxChunks = 3) => {
   // 🔹 Common stopwords (ignored in search)
   const stopWords = new Set([
     'the','is','at','which','on','a','an','and','or','but','in','with','to',
-    'for','of','as','by','this','that','it'
+    'for','of','as','by','this','that','it', 'what', 'when',
   ]);
 
   // 🔹 Process query → clean + tokenize
