@@ -1,4 +1,5 @@
 import Document from '../models/Document.js';
+import Flashcard from '../models/FlashCard.js';
 import FlashCard from '../models/FlashCard.js';
 import Quiz from "../models/Quiz.js";
 import { extractTextFromPDF } from '../utils/pdfParser.js';
@@ -152,20 +153,78 @@ export const getDocuments = async (req, res, next) => {
 // @access private
 
 export const getDocument = async (req, res, next) => {
+    try {
+        const document = await Document.findOne({
+            _id: req.params.id,
+            userId: req.user._id
+        });
+        //check ownership and existence
+        if(!document){
+            return res.status(404).json({
+                success: false,
+                error: 'Document not found',
+                statusCode: 404
+            });
+        }
 
+        //get counts of associated flashcards and quizzes
+        const flashcardCount = await Flashcard.countDocuments({ documentId: document._id, userId: req.user._id });
+        const quizCount = await Quiz.countDocuments({ documentId: document._id, userId: req.user._id });
+
+        //update last accessed
+        document.lastAccessed = Date.now();
+        await document.save();
+
+        //combine document data with counts
+        const documentData = document.toObject();
+        documentData.flashcardCount = flashcardCount;
+        documentData.quizCount = quizCount;
+
+        res.status(200).json({
+            success: true,
+            data: documentData
+        })
+    } catch (error) {
+        next(error);
+    }
 }
 
 // @desc delete document 
 // @route DELETE /api/documents/:id
 // @access private
 export const deleteDocument = async (req, res, next) => {
+    try {
+        const document = await Document.findOne({
+            _id: req.params.id,
+            userId: req.user._id
+        });
 
+        if(!document){
+            return res.status(404).json({
+                success: false,
+                error: 'Document not found',
+                statusCode: 404
+            });
+        }
+
+        //delete file from file system
+        await fs.unlink(document.filePath).catch(() => {});
+
+        //delete document
+        await document.deleteOne();
+        res.status(200).json({
+            success: true,
+            message: 'Document deleted successfully'
+        });
+    } catch (error) {
+        next(error);
+    }
 }
 
-// @desc  update document
+// @desc  update document title
 // @route PUT /api/documents/:id
 // @access private
 
-export const updateDocument = async (req, res, next) => {
+// export const updateDocument = async (req, res, next) => {
     
-}
+// }
