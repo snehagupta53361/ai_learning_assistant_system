@@ -1,6 +1,6 @@
 import Document from '../models/Document.js';
-import Flashcard from '../models/FlashCard.js';
-import FlashCard from '../models/FlashCard.js';
+import Flashcard from '../models/Flashcard.js';
+import FlashCard from '../models/Flashcard.js';
 import Quiz from "../models/Quiz.js";
 import { extractTextFromPDF } from '../utils/pdfParser.js';
 import { chunkText } from '../utils/textChunker.js';
@@ -126,7 +126,7 @@ export const getDocuments = async (req, res, next) => {
                 }
            },
            {
-                $projects: {
+                $project: {
                     extractedText: 0,
                     chunks: 0,
                     flashcardSets: 0,
