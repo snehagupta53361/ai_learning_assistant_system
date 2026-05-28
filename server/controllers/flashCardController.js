@@ -10,7 +10,10 @@ export const getFlashcards = async (req, res, next) => {
       userId: req.user._id,
       documentId: req.params.documentId
     })
-      .populate('documentId', 'title fileName')
+      .populate({
+        path: 'documentId',
+        select: 'title fileName'
+      })
       .sort({ createdAt: -1 });
 
     res.status(200).json({
@@ -30,7 +33,10 @@ export const getFlashcards = async (req, res, next) => {
 export const getAllFlashcardSets = async (req, res, next) => {
   try {
     const flashcardSets = await Flashcard.find({ userId: req.user._id })
-      .populate('documentId', 'title')
+      .populate({
+        path: 'documentId',
+        select: 'title',
+      })
       .sort({ createdAt: -1 });
     
     res.status(200).json({
@@ -96,10 +102,10 @@ export const toggleStarFlashcard = async (req, res, next) => {
   try {
     const flashcardSet = Flashcard.findOne({
       'cards._id': req.params.cardId,
-      'userId': req.user._id
+      userId: req.user._id,
     });
 
-    if(!flashcarSet){
+    if(!flashcardSet){
       return res.status(404).json({
         success: false,
         error: 'Flashcard set or card not found',
