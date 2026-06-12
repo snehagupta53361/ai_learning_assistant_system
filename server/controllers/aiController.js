@@ -1,10 +1,9 @@
-import Document from '../models/Document.js';
-import Flashcard from '../models/Flashcard.js';
-import Quiz from '../models/Quiz.js';
-import ChatHistory from '../models/ChatHistory.js';
-import * as geminiService from '../utils/geminiService.js';
-import { findRelevantChunks } from '../utils/textChunker.js';
-
+import Document from "../models/Document.js";
+import Flashcard from "../models/Flashcard.js";
+import Quiz from "../models/Quiz.js";
+import ChatHistory from "../models/ChatHistory.js";
+import * as geminiService from "../utils/geminiService.js";
+import { findRelevantChunks } from "../utils/textChunker.js";
 
 // @ desc        Generate flashcards from document
 // @route        POST /api/ai/generate-flashcards
@@ -14,10 +13,10 @@ export const generateFlashcards = async (req, res, next) => {
   try {
     const { documentId, count = 10 } = req.body;
 
-    if(!documentId){
+    if (!documentId) {
       return res.status(400).json({
         success: false,
-        error: 'Please provide documentId',
+        error: "Please provide documentId",
         statusCode: 400,
       });
     }
@@ -25,40 +24,40 @@ export const generateFlashcards = async (req, res, next) => {
     const document = await Document.findOne({
       _id: documentId,
       userId: req.user._id,
-      status: 'ready',
+      status: "ready",
     });
 
-    if(!document){
+    if (!document) {
       return res.status(404).json({
         success: false,
-        error: 'Document not found or not ready',
-        statusCode: 404
+        error: "Document not found or not ready",
+        statusCode: 404,
       });
     }
 
     //Generate flashcards using Gemini
     const cards = await geminiService.generateFlashcards(
       document.extractedText,
-      parseInt(count)
+      parseInt(count),
     );
 
     //save to database
     const flashcardSet = await Flashcard.create({
       userId: req.user._id,
       documentId: document._id,
-      cards: cards.map(card => ({
+      cards: cards.map((card) => ({
         question: card.question,
         answer: card.answer,
         difficulty: card.difficulty,
         reviewCount: 0,
-        isStarred: false
-      }))
+        isStarred: false,
+      })),
     });
 
     res.status(201).json({
       success: true,
       data: flashcardSet,
-      message: 'Flashcards generated successfully'
+      message: "Flashcards generated successfully",
     });
   } catch (error) {
     next(error);
@@ -71,7 +70,21 @@ export const generateFlashcards = async (req, res, next) => {
 
 export const generateQuiz = async (req, res, next) => {
   try {
-    
+    const { documentId, numQuestions = 5, title } = req.body;
+
+    if (!document) {
+      return res.status(400).json({
+        success: false,
+        error: "Please provide documentId",
+        statusCode: 400,
+      });
+    }
+
+    const document = await Document.findOne({
+      _id: documentId,
+      userId: req.user._id,
+      status: "ready",
+    });
   } catch (error) {
     next(error);
   }
@@ -83,7 +96,6 @@ export const generateQuiz = async (req, res, next) => {
 
 export const generateSummary = async (req, res, next) => {
   try {
-    
   } catch (error) {
     next(error);
   }
@@ -95,7 +107,6 @@ export const generateSummary = async (req, res, next) => {
 
 export const chat = async (req, res, next) => {
   try {
-    
   } catch (error) {
     next(error);
   }
@@ -107,12 +118,10 @@ export const chat = async (req, res, next) => {
 
 export const explainConcept = async (req, res, next) => {
   try {
-    
   } catch (error) {
     next(error);
   }
 };
-
 
 // @desc         Get chat history for a document
 // @route        GET /api/ai/chat-history/documentId
@@ -120,7 +129,6 @@ export const explainConcept = async (req, res, next) => {
 
 export const getChatHistory = async (req, res, next) => {
   try {
-    
   } catch (error) {
     next(error);
   }
