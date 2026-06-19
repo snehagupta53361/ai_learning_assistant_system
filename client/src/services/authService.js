@@ -1,0 +1,70 @@
+import axiosInstance from "../utils/axiosInstance.js";
+import { API_PATHS } from "../utils/apiPaths.js";
+
+const login = async (email, password) => {
+  try {
+    const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
+      email,
+      password,
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "An unknown error occured." };
+  }
+};
+
+const register = async (usernName, email, password) => {
+  try {
+    const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
+      usernName,
+      email,
+      password,
+    });
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "An unknown error occured." };
+  }
+};
+
+const getProfile = async () => {
+  try {
+    const response = await axiosInstance.get(API_PATHS.AUTH.GET_PROFILE);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "An unknown error occured." };
+  }
+};
+
+const updateProfile = async (userData) => {
+  try {
+    const response = await axiosInstance.put(
+      API_PATHS.AUTH.UPDATE_PROFILE,
+      userData,
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "An unknown error occured." };
+  }
+};
+
+const changePassword = async (newPassword) => {
+  try {
+    const response = await axiosInstance.post(
+      API_PATHS.AUTH.CHANGE_PASSWORD,
+      newPassword,
+    );
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { message: "An unknown error occured." };
+  }
+};
+
+const authService = {
+  login,
+  register,
+  getProfile,
+  updateProfile,
+  changePassword,
+};
+
+export default authService;

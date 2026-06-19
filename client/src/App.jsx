@@ -1,56 +1,67 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from './pages/auth/LoginPage';
-import SignupPage from './pages/auth/SignupPage';
-import NotFoundPage from './pages/NotFoundPage';
-import DashBoard from './pages/dashboard/DashBoard';
-import DocumentListPage from './pages/documents/DocumentListPage';
-import DocumentsDetailPage from './pages/documents/DocumentsDetailPage';
-import FlashCardListPage from './pages/flashcards/FlashCardListPage';
-import FlashCardPage from './pages/flashcards/FlashCardPage';
-import QuizTakePage from './pages/quizzes/QuizTakePage';
-import QuizResultPage from './pages/quizzes/QuizResultPage';
-import ProfilePage from './pages/profile/ProfilePage';
-import ProtectedRoute from './components/auth/ProtectedRoute';
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import LoginPage from "./pages/auth/LoginPage";
+import SignupPage from "./pages/auth/SignupPage";
+import NotFoundPage from "./pages/NotFoundPage";
+import DashBoard from "./pages/dashboard/DashBoard";
+import DocumentListPage from "./pages/documents/DocumentListPage";
+import DocumentsDetailPage from "./pages/documents/DocumentsDetailPage";
+import FlashCardListPage from "./pages/flashcards/FlashCardListPage";
+import FlashCardPage from "./pages/flashcards/FlashCardPage";
+import QuizTakePage from "./pages/quizzes/QuizTakePage";
+import QuizResultPage from "./pages/quizzes/QuizResultPage";
+import ProfilePage from "./pages/profile/ProfilePage";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import { useAuth } from "./context/AuthContext";
 
 const App = () => {
-    const isAuthenticated = false;
-    const loading = false;
+  const { isAuthenticated, loading } = useAuth();
 
-    if(loading){
-      return (
-        <div className='flex items-center justify-center h-screen'>
-          <p>Loading...</p>
-        </div>
-      );
-    }
-
+  if (loading) {
     return (
-      <Router>
-        <Routes>
-          <Route 
-            path='/'
-            element={isAuthenticated ? <Navigate to="/dashboard" replace/> : <Navigate to = "/login" replace/>}
-          />
-          <Route path='/login' element = {<LoginPage />}/>
-          <Route path="/registeer" element = {<SignupPage/>}/>
+      <div className="flex items-center justify-center h-screen">
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
-          {/* protected routes */}
-          <Route element={<ProtectedRoute />} >
-              <Route path='/dashboard' element={<DashBoard/>}/>
-              <Route path='/documents' element={<DocumentListPage />}/>
-              <Route path='documents/:id' element={<DocumentsDetailPage/>}/>
-              <Route path='/flashcards' element={<FlashCardListPage/>}/>
-              <Route path='/documents/:id/flashcards' element={FlashCardPage}/>
-              <Route path='/quizzes/quizId' element={QuizTakePage}/>
-              <Route path='/quizzes/:quizId/results' element={QuizResultPage}/>
-              <Route path='profile' element={ProfilePage}/>
-          </Route>
+  return (
+    <Router>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            isAuthenticated ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<SignupPage />} />
 
-          <Route path='*' element={<NotFoundPage />}/>
-        </Routes>
-      </Router>
-    )
-}
+        {/* protected routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<DashBoard />} />
+          <Route path="/documents" element={<DocumentListPage />} />
+          <Route path="documents/:id" element={<DocumentsDetailPage />} />
+          <Route path="/flashcards" element={<FlashCardListPage />} />
+          <Route path="/documents/:id/flashcards" element={FlashCardPage} />
+          <Route path="/quizzes/quizId" element={QuizTakePage} />
+          <Route path="/quizzes/:quizId/results" element={QuizResultPage} />
+          <Route path="profile" element={ProfilePage} />
+        </Route>
 
-export default App
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
