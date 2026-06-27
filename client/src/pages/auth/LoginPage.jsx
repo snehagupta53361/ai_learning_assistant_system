@@ -16,7 +16,6 @@ const LoginPage = () => {
   const { login } = useAuth();
 
   const handleSubmit = async (e) => {
-    console.log("handle submit called");
     e.preventDefault();
     setError("");
     setLoading(true);
