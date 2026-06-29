@@ -71,7 +71,7 @@ const DashBoard = () => {
       shadowColor: "shadow-emerald-500/25,",
     },
   ];
-  return <div></div>;
+  return <div>Dashboard</div>;
 };
 
 export default DashBoard;
