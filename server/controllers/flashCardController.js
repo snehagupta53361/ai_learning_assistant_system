@@ -8,26 +8,26 @@ export const getFlashcards = async (req, res, next) => {
   try {
     const flashcards = await Flashcard.find({
       userId: req.user._id,
-      documentId: req.params.documentId
+      documentId: req.params.documentId,
     })
       .populate({
-        path: 'documentId',
-        select: 'title fileName'
+        path: "documentId",
+        select: "title fileName",
       })
       .sort({ createdAt: -1 });
 
-
-    if(flashcards.length === 0){
-        return res.status(200).json({
-          success: true,
-          message: 'Flashcards not created for this document.'
-        })
-      }
+    if (flashcards.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "Flashcards not created for this document.",
+        count: flashcards.length,
+      });
+    }
 
     res.status(200).json({
       success: true,
       count: flashcards.length,
-      data: flashcards
+      data: flashcards,
     });
   } catch (error) {
     next(error);
@@ -42,17 +42,18 @@ export const getAllFlashcardSets = async (req, res, next) => {
   try {
     const flashcardSets = await Flashcard.find({ userId: req.user._id })
       .populate({
-        path: 'documentId',
-        select: 'title',
+        path: "documentId",
+        select: "title",
       })
       .sort({ createdAt: -1 });
-    
-      if(flashcardSets.length === 0){
-        return res.status(200).json({
-          success: true,
-          message: 'Flashcards not created.'
-        })
-      }
+
+    if (flashcardSets.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: "Flashcards not created.",
+        count: flashcardSets.length,
+      });
+    }
     res.status(200).json({
       success: true,
       count: flashcardSets.length,
@@ -70,29 +71,31 @@ export const getAllFlashcardSets = async (req, res, next) => {
 export const reviewFlashcard = async (req, res, next) => {
   try {
     const flashcardSet = await Flashcard.findOne({
-      'cards._id': req.params.cardId,
+      "cards._id": req.params.cardId,
       userId: req.user._id,
     });
 
-    if(!flashcardSet){
+    if (!flashcardSet) {
       return res.status(404).json({
         success: false,
-        error: 'Flashcard set or card not found',
-        statusCode: 404
+        error: "Flashcard set or card not found",
+        statusCode: 404,
       });
     }
 
-    const cardIndex = flashcardSet.cards.findIndex(card => card._id.toString() === req.params.cardId);
+    const cardIndex = flashcardSet.cards.findIndex(
+      (card) => card._id.toString() === req.params.cardId,
+    );
 
-    if(cardIndex === -1){
+    if (cardIndex === -1) {
       return res.status(404).json({
         success: false,
-        error: 'Card not found in set',
-        statusCode: 404
+        error: "Card not found in set",
+        statusCode: 404,
       });
     }
 
-    //update review infor
+    //update review information
     flashcardSet.cards[cardIndex].lastReviewed = new Date();
     flashcardSet.cards[cardIndex].reviewCount += 1;
 
@@ -100,9 +103,9 @@ export const reviewFlashcard = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      data: flashcardSet, 
-      message: 'Flashcard reviewed successfully',
-    })
+      data: flashcardSet,
+      message: "Flashcard reviewed successfully",
+    });
   } catch (error) {
     next(error);
   }
@@ -115,40 +118,41 @@ export const reviewFlashcard = async (req, res, next) => {
 export const toggleStarFlashcard = async (req, res, next) => {
   try {
     const flashcardSet = await Flashcard.findOne({
-      'cards._id': req.params.cardId,
+      "cards._id": req.params.cardId,
       userId: req.user._id,
     });
 
-
-    console.log(flashcardSet);
-    if(!flashcardSet){
+    if (!flashcardSet) {
       return res.status(404).json({
         success: false,
-        error: 'Flashcard set or card not found',
-        statusCode: 404
+        error: "Flashcard set or card not found",
+        statusCode: 404,
       });
     }
 
-    const cardIndex = flashcardSet.cards.findIndex(card => card._id.toString() === req.params.cardId);
+    const cardIndex = flashcardSet.cards.findIndex(
+      (card) => card._id.toString() === req.params.cardId,
+    );
 
-      if(cardIndex === -1){
-        return res.status(404).json({
-          success: false,
-          error: 'Card not found',
-          statusCode: 404,
-        });
-      }
-
-      //Toggle star
-      flashcardSet.cards[cardIndex].isStarred = !flashcardSet.cards[cardIndex].isStarred;
-
-      await flashcardSet.save();
-
-      res.status(200).json({
-        success: true,
-        data: flashcardSet,
-        message: `Flashcard ${flashcardSet.cards[cardIndex].isStarred ? 'Starred' : 'Unstarred'}`
+    if (cardIndex === -1) {
+      return res.status(404).json({
+        success: false,
+        error: "Card not found",
+        statusCode: 404,
       });
+    }
+
+    //Toggle star
+    flashcardSet.cards[cardIndex].isStarred =
+      !flashcardSet.cards[cardIndex].isStarred;
+
+    await flashcardSet.save();
+
+    res.status(200).json({
+      success: true,
+      data: flashcardSet,
+      message: `Flashcard ${flashcardSet.cards[cardIndex].isStarred ? "Starred" : "Unstarred"}`,
+    });
   } catch (error) {
     next(error);
   }
@@ -159,28 +163,27 @@ export const toggleStarFlashcard = async (req, res, next) => {
 // @access      Private
 
 export const deleteFlashcardSet = async (req, res, next) => {
-    try {
+  try {
     const flashcardSet = await Flashcard.findOne({
       _id: req.params.id,
       userId: req.user._id,
     });
 
-    if(!flashcardSet){
+    if (!flashcardSet) {
       return res.status(404).json({
         success: false,
-        error: 'Flashcard set not found', 
-        statusCode: 404
+        error: "Flashcard set not found",
+        statusCode: 404,
       });
     }
 
     await flashcardSet.deleteOne();
 
-      res.status(200).json({
-        success: true,
-        message: 'Flashcard set deleted successfully'
-      });
+    res.status(200).json({
+      success: true,
+      message: "Flashcard set deleted successfully",
+    });
   } catch (error) {
     next(error);
   }
-
 };
