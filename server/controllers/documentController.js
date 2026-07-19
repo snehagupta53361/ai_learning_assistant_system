@@ -6,11 +6,33 @@ import { extractTextFromPDF } from "../utils/pdfParser.js";
 import { chunkText } from "../utils/textChunker.js";
 import fs from "fs/promises";
 import mongoose from "mongoose";
+import cloudinary from "../config/cloudinary.js";
 
 // @desc         upload PDF document
 // @route POST   /api/documents/upload
 // access       protect
 
+const uploadBuffer = (buffer, options) =>
+  new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      options,
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      },
+    );
+
+    uploadStream.end(buffer);
+  });
+
+const createPdfPreviewUrl = ({ public_id: publicId, version }) =>
+  cloudinary.url(publicId, {
+    resource_type: "image",
+    type: "upload",
+    format: "pdf",
+    version,
+    secure: true,
+  });
 export const uploadDocument = async (req, res, next) => {
   try {
     if (!req.file) {
@@ -24,8 +46,6 @@ export const uploadDocument = async (req, res, next) => {
     const { title } = req.body;
 
     if (!title) {
-      //Delete uploaded file if no title provided
-      await fs.unlink(req.file.path);
       return res.status(400).json({
         success: false,
         error: "Please provide a document title",
@@ -33,22 +53,34 @@ export const uploadDocument = async (req, res, next) => {
       });
     }
 
-    //Cosntruct the URL for the uploaded file
-    const baseURL = `http://localhost:${process.env.PORT || 8000}`;
-    const fileURL = `${baseURL}/uploads/documents/${req.file.filename}`;
+    const { buffer, originalname } = req.file;
+    const fileName = originalname.replace(/\.pdf$/i, "");
+
+    // Upload PDFs as image assets so Cloudinary serves them inline and can generate
+    // PDF page previews. The buffer still comes directly from Multer memory storage.
+    const result = await uploadBuffer(buffer, {
+      resource_type: "image",
+      folder: process.env.CLOUDINARY_FOLDER || "pdfs",
+      public_id: `${Date.now()}-${fileName}`,
+      format: "pdf",
+      access_mode: "public",
+    });
+
+    const previewUrl = createPdfPreviewUrl(result);
 
     //create document record
     const document = await Document.create({
       userId: req.user._id,
       title,
       fileName: req.file.originalname,
-      filePath: fileURL,
+      fileUrl: result.secure_url,
+      cloudinaryId: result.public_id,
       fileSize: req.file.size,
       status: "processing",
     });
 
     //process PDF in background (in production, use a queue like BULL)
-    processPDF(document._id, req.file.path).catch((err) => {
+    processPDF(document._id, buffer).catch((err) => {
       console.error("PDF processing error:", err);
     });
 
@@ -58,18 +90,14 @@ export const uploadDocument = async (req, res, next) => {
       message: "Document uploaded successfully, processing in progress....",
     });
   } catch (error) {
-    //clean up file on errror
-    if (req.file) {
-      await fs.unlink(req.file.path).catch(() => {});
-    }
     next(error);
   }
 };
 
 //Helper function to process PDF
-const processPDF = async (documentId, filePath) => {
+const processPDF = async (documentId, dataBuffer) => {
   try {
-    const { text } = await extractTextFromPDF(filePath);
+    const { text } = await extractTextFromPDF(dataBuffer);
 
     //create chunks
     const chunks = chunkText(text, 500, 50);
@@ -80,8 +108,6 @@ const processPDF = async (documentId, filePath) => {
       chunks: chunks,
       status: "ready",
     });
-
-    console.log(`Document ${documentId} processed successfully`);
   } catch (error) {
     console.error(`Error processing document ${documentId}: `, error);
 

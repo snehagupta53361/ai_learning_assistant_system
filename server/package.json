@@ -13,7 +13,9 @@
   "type": "module",
   "dependencies": {
     "@google/genai": "^1.46.0",
+    "axios": "^1.18.1",
     "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.10.0",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
@@ -21,7 +23,8 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.3.3",
     "multer": "^2.1.1",
-    "pdf-parse": "^2.4.5"
+    "pdf-parse": "^2.4.5",
+    "streamifier": "^0.1.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

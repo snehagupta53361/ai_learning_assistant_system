@@ -19,7 +19,7 @@ const Modal = ({ isOpen, onClose, title, children }) => {
           </button>
 
           <div className="mb-6 pr-8">
-            <h3 className="text-xl font-medium text-slate-900 tracking-tight">
+            <h3 className="text-xl font-semibold text-slate-700 tracking-tight">
               {title}
             </h3>
           </div>

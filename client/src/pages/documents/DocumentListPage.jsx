@@ -74,7 +74,6 @@ const DocumentListPage = () => {
   };
 
   const handleDeleteRequest = (doc) => {
-    console.log(doc);
     setSelectedDoc(doc);
     setIsDeleteModalOpen(true);
   };
@@ -146,6 +145,7 @@ const DocumentListPage = () => {
       </div>
     );
   };
+
   return (
     <div className="min-h-screen">
       {/* Subtle background pattern */}

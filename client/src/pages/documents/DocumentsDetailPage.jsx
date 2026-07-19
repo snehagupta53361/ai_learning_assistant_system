@@ -32,14 +32,10 @@ const DocumentsDetailPage = () => {
 
   // Helper function to get the full pdf url
   const getPDFUrl = () => {
-    if (!document?.data?.filePath) return null;
+    if (!document?.data?.fileUrl) return null;
 
-    const filePath = document.data.filePath;
-    if (filePath.startsWith("http://") || filePath.startsWith("https://")) {
-      return filePath;
-    }
-    const baseUrl = proces.env.BACKEND_API_URL || "http://localhost:8000";
-    return `${baseUrl}${filePath.startsWith("/") ? "" : "/"}${filePath}`;
+    const fileUrl = document.data.fileUrl;
+    return fileUrl;
   };
 
   const renderContent = () => {
@@ -47,7 +43,7 @@ const DocumentsDetailPage = () => {
       return <Spinner />;
     }
 
-    if (!document || !document.data || !document.data.filePath) {
+    if (!document || !document.data || !document.data.fileUrl) {
       return <div className="text-center p-8 ">PDF not available.</div>;
     }
     const pdfUrl = getPDFUrl();

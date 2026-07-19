@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
   },
 });
 
-// Request Inceptor
+// Request Interceptor
 axiosInstance.interceptors.request.use(
   (config) => {
     const accessToken = localStorage.getItem("token");
