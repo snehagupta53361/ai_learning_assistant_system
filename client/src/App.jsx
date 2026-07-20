@@ -10,8 +10,8 @@ import SignupPage from "./pages/auth/SignupPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import DashBoard from "./pages/dashboard/DashBoard";
 import DocumentListPage from "./pages/documents/DocumentListPage";
+import DocumentsDetailPage from "./pages/documents/DocumentsDetailPage";
 import FlashcardListPage from "./pages/flashcards/FlashcardListPage.jsx";
-import Flashcard from "./components/flashcards/Flashcard.jsx";
 import FlashcardPage from "./pages/flashcards/FlashcardPage.jsx";
 import QuizTakePage from "./pages/quizzes/QuizTakePage";
 import QuizResultPage from "./pages/quizzes/QuizResultPage";
@@ -52,7 +52,7 @@ const App = () => {
           <Route path="/documents" element={<DocumentListPage />} />
           <Route path="documents/:id" element={<DocumentsDetailPage />} />
           <Route path="/flashcards" element={<FlashcardListPage />} />
-          <Route path="/documents/:id/flashcards" element={<Flashcard />} />
+          <Route path="/documents/:id/flashcards" element={FlashcardPage} />
           <Route path="/quizzes/:quizId" element={QuizTakePage} />
           <Route path="/quizzes/:quizId/results" element={QuizResultPage} />
           <Route path="profile" element={ProfilePage} />
