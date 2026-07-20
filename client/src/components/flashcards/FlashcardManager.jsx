@@ -123,7 +123,6 @@ const FlashcardManager = ({ documentId }) => {
     setDeleting(true);
     try {
       await flashcardService.deleteFlashcardSet(setToDelete._id);
-      console.log("Flashcard deleted successfully");
       toast.success("Flashcard deleted successfully");
       setIsDeleteModalOpen(false);
       setSetToDelete(null);

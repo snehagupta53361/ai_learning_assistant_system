@@ -51,7 +51,6 @@ const ChatInterface = () => {
     setHistory((prev) => [...prev, userMessage]);
     setMessage("");
     setLoading(true);
-    console.log("Generating response");
     try {
       const response = await aiService.chat(documentId, userMessage.content);
       const assistantMessage = {

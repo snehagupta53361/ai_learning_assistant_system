@@ -12,27 +12,6 @@ import cloudinary from "../config/cloudinary.js";
 // @route POST   /api/documents/upload
 // access       protect
 
-const uploadBuffer = (buffer, options) =>
-  new Promise((resolve, reject) => {
-    const uploadStream = cloudinary.uploader.upload_stream(
-      options,
-      (error, result) => {
-        if (error) return reject(error);
-        resolve(result);
-      },
-    );
-
-    uploadStream.end(buffer);
-  });
-
-const createPdfPreviewUrl = ({ public_id: publicId, version }) =>
-  cloudinary.url(publicId, {
-    resource_type: "image",
-    type: "upload",
-    format: "pdf",
-    version,
-    secure: true,
-  });
 export const uploadDocument = async (req, res, next) => {
   try {
     if (!req.file) {
@@ -66,8 +45,6 @@ export const uploadDocument = async (req, res, next) => {
       access_mode: "public",
     });
 
-    const previewUrl = createPdfPreviewUrl(result);
-
     //create document record
     const document = await Document.create({
       userId: req.user._id,
@@ -93,6 +70,20 @@ export const uploadDocument = async (req, res, next) => {
     next(error);
   }
 };
+
+// Helper function to upload pdf on cloudinary
+const uploadBuffer = (buffer, options) =>
+  new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      options,
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      },
+    );
+
+    uploadStream.end(buffer);
+  });
 
 //Helper function to process PDF
 const processPDF = async (documentId, dataBuffer) => {

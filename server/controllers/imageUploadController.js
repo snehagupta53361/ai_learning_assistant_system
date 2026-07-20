@@ -13,15 +13,6 @@ const uploadBuffer = (buffer, options) =>
     uploadStream.end(buffer);
   });
 
-const createPdfPreviewUrl = ({ public_id: publicId, version }) =>
-  cloudinary.url(publicId, {
-    resource_type: "image",
-    type: "upload",
-    format: "pdf",
-    version,
-    secure: true,
-  });
-
 const imageUploadController = async (req, res, next) => {
   try {
     if (!req.file) {
@@ -41,17 +32,6 @@ const imageUploadController = async (req, res, next) => {
       public_id: `${Date.now()}-${fileName}`,
       format: "pdf",
       access_mode: "public",
-    });
-
-    const previewUrl = createPdfPreviewUrl(result);
-
-    console.log({
-      message: "PDF uploaded successfully.",
-      publicId: result.public_id,
-      url: result.secure_url,
-      // Use this URL as an iframe/object source in the application.
-      previewUrl: previewUrl,
-      bytes: result.bytes,
     });
 
     return res.status(201).json({
