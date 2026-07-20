@@ -45,6 +45,7 @@ const protect = async (req, res, next) => {
   }
 
   if (!token) {
+    console.log("No token found in headers");
     return res.status(401).json({
       success: false,
       error: "Not authorized, no token",

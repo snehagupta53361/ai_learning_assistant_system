@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
-const FlashCardListPage = () => {
-  return (
-    <div>
-      
-    </div>
-  )
-}
+const FlashcardListPage = () => {
+  return <div></div>;
+};
 
-export default FlashCardListPage
+export default FlashcardListPage;

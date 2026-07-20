@@ -10,9 +10,9 @@ import SignupPage from "./pages/auth/SignupPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import DashBoard from "./pages/dashboard/DashBoard";
 import DocumentListPage from "./pages/documents/DocumentListPage";
-import DocumentsDetailPage from "./pages/documents/DocumentsDetailPage";
-import FlashCardListPage from "./pages/flashcards/FlashCardListPage";
-import FlashCardPage from "./pages/flashcards/FlashCardPage";
+import FlashcardListPage from "./pages/flashcards/FlashcardListPage.jsx";
+import Flashcard from "./components/flashcards/Flashcard.jsx";
+import FlashcardPage from "./pages/flashcards/FlashcardPage.jsx";
 import QuizTakePage from "./pages/quizzes/QuizTakePage";
 import QuizResultPage from "./pages/quizzes/QuizResultPage";
 import ProfilePage from "./pages/profile/ProfilePage";
@@ -51,8 +51,8 @@ const App = () => {
           <Route path="/dashboard" element={<DashBoard />} />
           <Route path="/documents" element={<DocumentListPage />} />
           <Route path="documents/:id" element={<DocumentsDetailPage />} />
-          <Route path="/flashcards" element={<FlashCardListPage />} />
-          <Route path="/documents/:id/flashcards" element={FlashCardPage} />
+          <Route path="/flashcards" element={<FlashcardListPage />} />
+          <Route path="/documents/:id/flashcards" element={<Flashcard />} />
           <Route path="/quizzes/:quizId" element={QuizTakePage} />
           <Route path="/quizzes/:quizId/results" element={QuizResultPage} />
           <Route path="profile" element={ProfilePage} />
