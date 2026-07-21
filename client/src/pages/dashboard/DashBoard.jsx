@@ -10,6 +10,7 @@ import {
   Clock,
 } from "lucide-react";
 import AppLayout from "../../components/layout/AppLayout.jsx";
+import { Link } from "react-router-dom";
 
 const DashBoard = () => {
   const [dashboardData, setDashboardData] = useState(null);
@@ -169,12 +170,12 @@ const DashBoard = () => {
                       </p>
                     </div>
                     {activity.link && (
-                      <a
+                      <Link
                         href={activity.link}
                         className="ml-4 px-4 py-2 text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-all duration-200 whitespace-nowrap"
                       >
                         View
-                      </a>
+                      </Link>
                     )}
                   </div>
                 ))}
