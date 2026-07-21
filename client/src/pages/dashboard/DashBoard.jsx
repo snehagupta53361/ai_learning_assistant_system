@@ -171,7 +171,7 @@ const DashBoard = () => {
                     </div>
                     {activity.link && (
                       <Link
-                        href={activity.link}
+                        to={activity.link}
                         className="ml-4 px-4 py-2 text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-all duration-200 whitespace-nowrap"
                       >
                         View
