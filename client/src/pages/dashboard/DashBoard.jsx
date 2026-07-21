@@ -11,8 +11,6 @@ import {
 } from "lucide-react";
 import AppLayout from "../../components/layout/AppLayout.jsx";
 
-const FRONTEND_URL = import.meta.env.FRONTEND_URL;
-
 const DashBoard = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -172,7 +170,7 @@ const DashBoard = () => {
                     </div>
                     {activity.link && (
                       <a
-                        href={`${FRONTEND_URL}${activity.link}`}
+                        href={activity.link}
                         className="ml-4 px-4 py-2 text-xs font-semibold text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition-all duration-200 whitespace-nowrap"
                       >
                         View
