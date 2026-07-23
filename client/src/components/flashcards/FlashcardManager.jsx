@@ -85,7 +85,7 @@ const FlashcardManager = ({ documentId }) => {
       await flashcardService.reviewFlashcard(currentCard._id, index);
       toast.success("Flashcard reviewed!");
     } catch (error) {
-      toast.error("Failed to review flashcard.");
+      toast.error(error.message || "Failed to review flashcard.");
     }
   };
 
@@ -107,7 +107,7 @@ const FlashcardManager = ({ documentId }) => {
       setSelectedSet(updatedSets.find((set) => set._id === selectedSet._id));
       toast.success("Flashcard star status updated!");
     } catch (error) {
-      toast.error("Failed to update star status.");
+      toast.error(error.message || "Failed to update star status.");
     }
   };
 
@@ -126,7 +126,9 @@ const FlashcardManager = ({ documentId }) => {
       toast.success("Flashcard deleted successfully");
       setIsDeleteModalOpen(false);
       setSetToDelete(null);
-      fetchFlashcardSets();
+      setFlashcardSets(
+        flashcardSets.filter((flashcard) => flashcard._id !== flashcard._id),
+      );
     } catch (error) {
       toast.error(error.message || "Failed to delete flashcard set");
       console.error(error);

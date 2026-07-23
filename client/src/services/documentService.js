@@ -42,7 +42,7 @@ const getDocumentById = async (id) => {
 
 const deleteDocument = async (id) => {
   try {
-    const response = await axiosInstance(
+    const response = await axiosInstance.delete(
       API_PATHS.DOCUMENTS.DELETE_DOCUMENT(id),
     );
     return response.data;

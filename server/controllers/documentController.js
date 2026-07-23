@@ -227,8 +227,10 @@ export const deleteDocument = async (req, res, next) => {
       });
     }
 
-    //delete file from file system
-    await fs.unlink(document.filePath).catch(() => {});
+    //delete file from cloudinary
+    const response = await cloudinary.uploader.destroy(document.cloudinaryId, {
+      resource_type: "image",
+    });
 
     //delete document
     await document.deleteOne();

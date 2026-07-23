@@ -1,7 +1,7 @@
 import React from "react";
 
 const FlashcardPage = () => {
-  return <div></div>;
+  return <div>Flashcard Page</div>;
 };
 
 export default FlashcardPage;

@@ -6,6 +6,7 @@ import documentService from "../../services/documentService";
 import Spinner from "../../components/common/Spinner";
 import Button from "../../components/common/Button";
 import DocumentCard from "../../components/documents/DocumentCard";
+import Modal from "../../components/common/Modal";
 
 const DocumentListPage = () => {
   const [documents, setDocuments] = useState([]);
@@ -42,7 +43,7 @@ const DocumentListPage = () => {
     const file = e.target.files[0];
     if (file) {
       setUploadFile(file);
-      setUploadTitle(file.name.replace(/\.[^/.]+$/, ""));
+      if (!uploadFile) setUploadTitle(file.name.replace(/\.[^/.]+$/, ""));
     }
   };
 
@@ -86,6 +87,7 @@ const DocumentListPage = () => {
       setIsDeleteModalOpen(false);
       setSelectedDoc(null);
       setDocuments(documents.filter((d) => d._id !== selectedDoc._id));
+      // fetchDocuments();
     } catch (error) {
       toast.error(error.message || "Failed to delete Document.");
     } finally {
@@ -177,7 +179,11 @@ const DocumentListPage = () => {
           <div className="relative w-full max-w-lg bg-white/95 backdrop-blur-xl border border-slate-200/60 rounded-2xl shadow-2xl shadow-slate-900/20 p-6">
             {/* Close Button */}
             <button
-              onClick={() => setIsUploadModalOpen(false)}
+              onClick={() => {
+                setIsUploadModalOpen(false);
+                setUploadFile(null);
+                setUploadTitle("");
+              }}
               className="absolute top-6 right-6 w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all duration-200 cursor-pointer"
             >
               <X className="w-5 h-5" strokeWidth={2} />
@@ -258,7 +264,11 @@ const DocumentListPage = () => {
                   type="button"
                   disabled={uploading}
                   className="flex-1 h-11 px-4 border-2 border-slate-200 rounded-xl bg-white text-slate-700 text-sm font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                  onClick={() => setIsUploadModalOpen(false)}
+                  onClick={() => {
+                    setIsUploadModalOpen(false);
+                    setUploadFile(null);
+                    setUploadTitle("");
+                  }}
                 >
                   Cancel
                 </button>
@@ -281,6 +291,45 @@ const DocumentListPage = () => {
           </div>
         </div>
       )}
+      {/* Delete confirmation modal */}
+      <Modal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        title={`Delete ${selectedDoc ? selectedDoc.title : ""}`}
+      >
+        <div className="space-y-6">
+          <p className="text-sm text-slate-700">
+            Are you sure you want to delete this document? This action cannot be
+            undone and this document will be permanently removed.
+          </p>
+          <div className="flex items-center justify-end gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => setIsDeleteModalOpen(false)}
+              disabled={deleting}
+              className="px-5 h-11 bg-linear-to-br from-slate-100 to-slate-100 hover:bg-slate-200 text-slate-700 font-medium text-sm rounded-xl transition-all duration-200 shadow-lg shadow-slate-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleConfirmDelete}
+              disabled={deleting}
+              className={`px-5 h-11 bg-linear-to-r from-rose-500 to-red-500 hover:from-rose-600 hover:to-red-600 text-white font-semibold text-sm rounded-xl transition-all duration-200 shadow-lg shadow-rose-500/25 hover:scale-95 active:scale-95 cursor-pointer disabled:scale-100 disabled:opacity-50 disabled:cursor-not-allowed`}
+            >
+              {deleting ? (
+                <span className="flex items-center gap-2">
+                  {" "}
+                  <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  Deleting
+                </span>
+              ) : (
+                "Delete Set"
+              )}
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };
