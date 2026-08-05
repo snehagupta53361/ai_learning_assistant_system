@@ -50,7 +50,7 @@ const QuizCard = ({ quiz, onDelete }) => {
 
         {/* Action Button */}
         <div className="mt-2 pt-4 border-t border-slate-100">
-          {quiz?.useAnswers?.length > 0 ? (
+          {quiz?.userAnswers?.length > 0 ? (
             <Link to={`/quizzes/${quiz._id}/results`}>
               <button className="group/btn w-full inline-flex items-center justify-center gap-2 h-11 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm rounded-xl transition-all duration-200 acitve:scale-95 cursor-pointer">
                 <BarChart2 className="" strokeWidth={2.5} />

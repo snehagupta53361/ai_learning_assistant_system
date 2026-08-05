@@ -89,7 +89,7 @@ export const generateQuiz = async (text, numQuestions = 5) => {
   O2: [Option 2]
   O3: [Option 3]
   O4: [Option 4]
-  C: [Correct option - exactly as written above]
+  C: [Correct option - exactly as written above, include only option text]
   E: [Brief explanation]
   D: [Difficulty: easy, medium, or hard]
   
@@ -105,6 +105,7 @@ export const generateQuiz = async (text, numQuestions = 5) => {
     });
 
     const generatedText = response.text;
+    console.log(generatedText);
 
     const questions = [];
     const questionBlocks = generatedText

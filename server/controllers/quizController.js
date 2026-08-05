@@ -91,8 +91,8 @@ export const submitQuiz = async (req, res, next) => {
     let correctCount = 0;
     const userAnswers = [];
 
-    answers.forEach((answers) => {
-      const { questionIndex, selectedAnswer } = answers;
+    answers.forEach((answer) => {
+      const { questionIndex, selectedAnswer } = answer;
 
       if (questionIndex < quiz.questions.length) {
         const question = quiz.questions[questionIndex];
